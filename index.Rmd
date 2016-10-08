@@ -7,7 +7,7 @@ framework   : io2012
 highlighter : highlight.js
 hitheme     : monokai
 widgets     : [mathjax]
-mode        : draft
+mode        : selfcontained
 knit        : slidify::knit2slides
 ---
 
