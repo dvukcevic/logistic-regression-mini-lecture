@@ -1,0 +1,482 @@
+---
+title       : Logistic regression
+subtitle    : 11 Oct 2016
+author      : Damjan Vukcevic
+job         : University of Melbourne
+framework   : io2012
+highlighter : highlight.js
+hitheme     : monokai
+widgets     : [mathjax]
+mode        : draft
+knit        : slidify::knit2slides
+---
+
+```{r setup, include=FALSE}
+## R code to set up all the data and models.
+
+# Load packages.
+library(MASS)
+library(plyr)
+
+# Functions.
+logit <- function(p)
+    log(p / (1 - p))
+expit <- function(x)
+    1 / (1 + exp(-x))
+plotCI <- function(..., sfrac = 0, gap = 0, pch = 19, cex = 1.2, lwd = 2,
+                   col = "blue")
+    gplots::plotCI(..., sfrac = sfrac, gap = gap, pch = pch, cex = cex,
+                   lwd = lwd, col = col)
+
+# Set seed for reproducibility.
+set.seed(1710)
+
+# Linear regression example, synthetic data.
+x <- rnorm(100, 3)
+y <- rnorm(x, x)
+m1 <- lm(y ~ x)
+
+# Logistic regression example 1, data on diabetes.
+m2 <- glm(type ~ glu, Pima.tr, family = binomial)
+d1 <- Pima.tr
+d1$type_ <- jitter(as.numeric(d1$type) - 1, amount = 0.02)
+d2 <- ddply(Pima.tr, .(cut(glu, 8)), summarise,
+            glu     = mean(glu),
+            num     = length(type),
+            yes     = sum(type == "Yes"),
+            no      = sum(type == "No"),
+            type    = yes / num,
+            type.li = qbeta(0.05, 0.5 + yes, 0.5 + no),
+            type.ui = qbeta(0.95, 0.5 + yes, 0.5 + no))
+d2[1, "type"] <- d2[1, "type.li"]  # tweak boundary estimate
+d3 <- data.frame(glu = seq(60, 200, 1))
+d3$p1 <- predict(m2, newdata = d3)
+d3$p2 <- predict(m2, newdata = d3, type = "response")
+
+# Plotting code for logistic regression example 1.
+plotData <- function(col = "blue")
+{
+    plot(d1$glu, d1$type_,
+         type = "n",
+         yaxt = "n",
+         ylim = c(-0.05, 1.05),
+         xlab = "Glucose concentration",
+         ylab = "Diabetes")
+    abline(h = 0:1, col = "grey")
+    points(type_ ~ glu, d1, col = col)
+    axis(2, 0:1, c("No (0)", "Yes (1)"), las = 1)
+}
+addIntervals <- function()
+    plotCI(d2$glu, d2$type, li = d2$type.li, ui = d2$type.ui, add = TRUE)
+addFit <- function()
+    lines(p2 ~ glu, d3, lty = 2, lwd = 2, col = "magenta")
+plot1 <- function()
+{
+    plotData()
+}
+plot2 <- function()
+{
+    plotData(col = "grey")
+    addIntervals()
+}
+plot3 <- function()
+{
+    plotData(col = "grey")
+    addIntervals()
+    addFit()
+}
+plot4 <- function()
+{
+    plotCI(d2$glu, logit(d2$type),
+           li = logit(d2$type.li),
+           ui = logit(d2$type.ui),
+           xlim = range(d1$glu),
+           ylim = c(-5.5, 2.5),
+           xlab = "Glucose concentration",
+           ylab = "Diabetes  (log odds)")
+    abline(m2, lty = 2, lwd = 2, col = "magenta")
+}
+
+# SNP example, using simulated data.
+snp <- data.frame(cases    = c(301, 486, 213),
+                  controls = c(360, 468, 172),
+                  genotype = 0:2)
+m3 <- glm(cbind(cases, controls) ~ genotype, snp, family = binomial)
+snp <- mutate(snp,
+              lodds    = log(cases / controls),
+              lodds.li = logit(qbeta(0.05, cases, controls)),
+              lodds.ui = logit(qbeta(0.95, cases, controls)))
+
+# Plotting code for SNP example.
+plotSnp <- function()
+{
+    plotCI(snp$genotype, snp$lodds,
+           li = snp$lodds.li,
+           ui = snp$lodds.ui,
+           xaxt = "n",
+           xlim = c(-0.1, 2.1),
+           xlab = "Genotype",
+           ylab = "log(cases / controls)")
+    axis(1, 0:2)
+    abline(m3, lty = 2, lwd = 2, col = "magenta")
+}
+```
+
+## Linear regression
+
+```{r linear-regression-1, echo=FALSE, fig.align="center"}
+plot(x, y, pch = 19, col = "blue")
+```
+
+---
+
+## Linear regression
+
+```{r linear-regression-2, echo=FALSE, fig.align="center"}
+plot(x, y, pch = 19, col = "blue")
+abline(m1, lty = 2, lwd = 2, col = "magenta")
+```
+
+---
+
+## Binary outcome variable
+
+```{r logistic-regression-1, echo=FALSE, fig.width=8, fig.align="center"}
+plot1()
+```
+
+---
+
+## Binary outcome variable
+
+```{r logistic-regression-2, echo=FALSE, fig.width=8, fig.align="center"}
+plot2()
+```
+
+---
+
+## Binary outcome variable
+
+```{r logistic-regression-3, echo=FALSE, fig.width=8, fig.align="center"}
+plot3()
+```
+
+---
+
+## Binary outcome variable
+
+```{r logistic-regression-4, echo=FALSE, fig.width=8, fig.align="center"}
+plot4()
+```
+
+---
+
+## Link function
+
+Transform outcome probabilities onto the *log odds* scale:
+\[\mathrm{logit}(p) = \log\left(\frac{p}{1-p}\right)\]
+
+```{r logit-link, echo=FALSE, fig.width=7, fig.height=4, fig.align="center"}
+par(mar = c(5.1, 4.1, 2, 2))
+curve(expit, -4, 4, lwd = 2, col = 4,
+      xaxs = "i", yaxs = "i", ylim = c(0, 1),
+      ylab = "p", xlab = "logit( p )")
+```
+
+Such a transformation is called a **link function**
+
+---
+
+## Logistic regression
+
+$Y_i$ is binary outcome variable (taking values 0 or 1)  
+$X_i$ is a predictor variable
+
+Logistic regression model:
+\[p_i = \Pr(Y_i = 1 \mid X_i)\]
+\[\mathrm{logit}(p_i) = \mu + \beta X_i\]
+
+---
+
+## Logistic regression
+
+$Y_i$ is binary outcome variable (taking values 0 or 1)  
+$X_i$ is a predictor variable
+
+Logistic regression model:
+\[p_i = \Pr(Y_i = 1 \mid X_i)\]
+\[\mathrm{logit}(p_i) = \mu + \beta X_i\]
+
+Notes:
+
+* The observations $Y_i$ are assumed to be independent (conditional on $X_i$)
+
+* The logit function 'links' the original scale (of the outcome variable) with
+the modelling scale (of the linear predictor), ensuring all predictions give
+valid probabilities
+
+---
+
+## Parameter interpretation
+
+Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]
+
+Consider binary $X_i \in \{0, 1\}$
+\[X_i = 0 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                               \phantom{e^{\beta}}\]
+\[X_i = 1 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                                        e^{\beta}\]
+
+$e^{\mu}$ is the **baseline odds**
+
+$e^{\beta}$ is the **odds ratio** (OR),
+and $\beta$ is the **log odds ratio**
+
+---
+
+## Comparison to linear regression
+
+Logistic regression:
+\[\mathrm{logit}\left(\Pr\left(Y_i = 1\right)\right) = \mu + \beta X_i\]
+
+Linear regression:
+\[Y_i = \mu + \beta X_i + \epsilon_i\]
+\[\epsilon_i \sim \mathrm{N}(0, \sigma^2)\]
+
+Differences:
+
+* No error term
+* No variance parameter
+
+---
+
+## Likelihood function
+
+The likelihood is a product of mass functions of Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
+
+The parameters and predictor variables are hidden away inside the $p_i$ terms,
+\[p_i = \frac{e^{\mu + \beta X_i}}{1 + e^{\mu + \beta X_i}}\]
+
+Maximise the likelihood using the **iteratively reweighted least squares
+(IRLS)** method
+
+Estimation and testing then follow the same as for linear regression...
+
+---
+
+## Estimation
+
+Parameter estimates from maximum likelihood  
+Standard error from the Fisher information matrix
+
+Example:
+\[\begin{aligned}
+  \hat\mu   &= -5.5    &(\textrm{s.e. }\: 0.84)   \\
+  \hat\beta &=  0.038  &(\textrm{s.e. }\: 0.0063)
+  \end{aligned}\]
+
+Easier to interpret as an odds ratio:
+\[\textrm{OR} = e^{\hat\beta} = 1.04\]
+
+Can also calculate a confidence interval for the OR:
+\[\textrm{95% CI} = e^{\hat\beta \pm 2 \mathrm{se}(\hat\beta)} = (1.03, 1.05)\]
+
+Standard likelihood theory: estimates are asymptotically unbiased, efficient
+and normally distributed
+
+---
+
+## Hypothesis testing
+
+Usually interested in tests of effect parameters, for example:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]
+
+Use a likelihood ratio test to carry this out:
+
+* Fit both models
+* Compare $-2 \log(\textrm{likelihood ratio})$ against a $\chi^2$ distribution
+* Usually, just summarise the outcome by a p-value
+
+---
+
+## Hypothesis testing
+
+Usually interested in tests of effect parameters, for example:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]
+
+Use a likelihood ratio test to carry this out:
+
+* Fit both models
+* Compare $-2 \log(\textrm{likelihood ratio})$ against a $\chi^2$ distribution
+* Usually, just summarise the outcome by a p-value
+
+Example:
+\[\textrm{p-value} = 2.5 \times 10^{-12}\]
+
+---
+
+## Building up more complex models
+
+Can add more predictor variables, the same as for linear regression:
+
+* Continuous $x$
+* Discrete $x$
+* Non-linear transformations ($x^2$, $\sin(x)$, etc.)
+* Interaction terms
+
+Estimation and hypothesis testing is analogous to linear regression
+
+---
+
+## Case-control studies and logistic regression
+
+Case-control studies: only ORs are estimable
+
+Logistic regression: estimates ORs
+
+*A perfect match!*
+
+---
+
+## Case-control studies and logistic regression
+
+Case-control studies: only ORs are estimable
+
+Logistic regression: estimates ORs
+
+*A perfect match!*
+
+(Note: this is a property of the logit link function)
+
+Example: genome-wide association studies (GWAS)
+
+---
+
+## GWAS example, single SNP analysis
+
+Consider a study with 1000 cases and 1000 controls
+
+For individual $i$:
+
+* $Y_i$ is the case-control status
+* $G_i$ is the genotype of a given SNP
+
+---
+
+## GWAS example, single SNP analysis
+
+Consider a study with 1000 cases and 1000 controls
+
+For individual $i$:
+
+* $Y_i$ is the case-control status
+* $G_i$ is the genotype of a given SNP
+
+Example data:
+
+                    |  $G = 0$  |  $G = 1$  |  $G = 2$
+------------------- | --------- | --------- | ---------
+$Y = 0$ (controls)  |    360    |    468    |    172
+$Y = 1$ (cases)     |    301    |    486    |    213
+
+---
+
+## Models for single-SNP association
+
+### Additive model
+\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
+Each copy of the allele increase the log odds of disease by $e^{\beta}$  
+**This model underlies the vast majority of analyses**
+
+---
+
+## Models for single-SNP association
+
+### Additive model
+\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
+Each copy of the allele increase the log odds of disease by $e^{\beta}$  
+**This model underlies the vast majority of analyses**
+
+### General model
+\[\mathrm{logit}(p_i) = \mu + \beta_1 \mathrm{I}(G_i = 1) +
+                              \beta_2 \mathrm{I}(G_i = 2)\]
+The heterozygote OR is $e^{\beta_1}$ and the homozygote OR is $e^{\beta_2}$  
+**Here, the genotype is treated as categorical**
+
+--- &twocol
+
+## Inference with the additive model
+
+*** =left
+
+```{r snp, echo=FALSE, fig.width=5, fig.align="center"}
+plotSnp()
+```
+
+*** =right
+
+Parameter estimates:
+\[\begin{aligned}
+  \hat\mu   &= -0.17  &(\textrm{s.e. }\: 0.071) \\
+  \hat\beta &=  0.20  &(\textrm{s.e. }\: 0.063)
+  \end{aligned}\]
+
+\[\begin{aligned}
+  \textrm{OR}     &= e^{\hat\beta} = 1.22 \\
+  \textrm{95% CI} &= (1.08, 1.38)
+  \end{aligned}\]
+
+Association test:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]
+
+\[\textrm{p-value} = 0.0017\]
+
+**NOT** 'genome-wide significant'
+
+---
+
+## Extensions
+
+Can easily add covariates:
+
+\[\mathrm{logit}(p_i) = \mu + \beta X_i + \mathbf{\gamma Z} \]
+
+For example: sex, ethnicity, principal components,...
+
+Inference and testing follows similarly
+
+---
+
+## Issues, extensions & related topics
+
+* Multinomial logistic regression
+* Ordinal logistic regression
+* Equivalence with log-linear models (Poisson regression)
+* Grouped vs individual data
+* Separability
+* Multicollinearity
+* Noncollapsibility
+* Modelling extra dispersion
+* Association $\ne$ causation
+
+---
+
+## Stuff I won't mention probably...
+
+* Saturated models (complete fit to the data)
+* Contingency tables

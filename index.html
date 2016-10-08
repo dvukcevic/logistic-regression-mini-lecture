@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logistic regression</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Logistic regression">
+  <meta name="author" content="Damjan Vukcevic">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/highlighters/highlight.js/css/monokai.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/damjan.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/frameworks/io2012/js/slides" 
+    src="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Logistic regression</h1>
+    <h2>11 Oct 2016</h2>
+    <p>Damjan Vukcevic<br/>University of Melbourne</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Linear regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/linear-regression-1-1.png" title="plot of chunk linear-regression-1" alt="plot of chunk linear-regression-1" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Linear regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/linear-regression-2-1.png" title="plot of chunk linear-regression-2" alt="plot of chunk linear-regression-2" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Binary outcome variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/logistic-regression-1-1.png" title="plot of chunk logistic-regression-1" alt="plot of chunk logistic-regression-1" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Binary outcome variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/logistic-regression-2-1.png" title="plot of chunk logistic-regression-2" alt="plot of chunk logistic-regression-2" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Binary outcome variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/logistic-regression-3-1.png" title="plot of chunk logistic-regression-3" alt="plot of chunk logistic-regression-3" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Binary outcome variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/logistic-regression-4-1.png" title="plot of chunk logistic-regression-4" alt="plot of chunk logistic-regression-4" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Link function</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Transform outcome probabilities onto the <em>log odds</em> scale:
+\[\mathrm{logit}(p) = \log\left(\frac{p}{1-p}\right)\]</p>
+
+<p><img src="assets/fig/logit-link-1.png" title="plot of chunk logit-link" alt="plot of chunk logit-link" style="display: block; margin: auto;" /></p>
+
+<p>Such a transformation is called a <strong>link function</strong></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Logistic regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\(Y_i\) is binary outcome variable (taking values 0 or 1)<br>
+\(X_i\) is a predictor variable</p>
+
+<p>Logistic regression model:
+\[p_i = \Pr(Y_i = 1 \mid X_i)\]
+\[\mathrm{logit}(p_i) = \mu + \beta X_i\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Logistic regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\(Y_i\) is binary outcome variable (taking values 0 or 1)<br>
+\(X_i\) is a predictor variable</p>
+
+<p>Logistic regression model:
+\[p_i = \Pr(Y_i = 1 \mid X_i)\]
+\[\mathrm{logit}(p_i) = \mu + \beta X_i\]</p>
+
+<p>Notes:</p>
+
+<ul>
+<li><p>The observations \(Y_i\) are assumed to be independent (conditional on \(X_i\))</p></li>
+<li><p>The logit function &#39;links&#39; the original scale (of the outcome variable) with
+the modelling scale (of the linear predictor), ensuring all predictions give
+valid probabilities</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Parameter interpretation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]</p>
+
+<p>Consider binary \(X_i \in \{0, 1\}\)
+\[X_i = 0 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                               \phantom{e^{\beta}}\]
+\[X_i = 1 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                                        e^{\beta}\]</p>
+
+<p>\(e^{\mu}\) is the <strong>baseline odds</strong></p>
+
+<p>\(e^{\beta}\) is the <strong>odds ratio</strong> (OR),
+and \(\beta\) is the <strong>log odds ratio</strong></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Comparison to linear regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Logistic regression:
+\[\mathrm{logit}\left(\Pr\left(Y_i = 1\right)\right) = \mu + \beta X_i\]</p>
+
+<p>Linear regression:
+\[Y_i = \mu + \beta X_i + \epsilon_i\]
+\[\epsilon_i \sim \mathrm{N}(0, \sigma^2)\]</p>
+
+<p>Differences:</p>
+
+<ul>
+<li>No error term</li>
+<li>No variance parameter</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Likelihood function</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The likelihood is a product of mass functions of Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
+
+<p>The parameters and predictor variables are hidden away inside the \(p_i\) terms,
+\[p_i = \frac{e^{\mu + \beta X_i}}{1 + e^{\mu + \beta X_i}}\]</p>
+
+<p>Maximise the likelihood using the <strong>iteratively reweighted least squares
+(IRLS)</strong> method</p>
+
+<p>Estimation and testing then follow the same as for linear regression...</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Estimation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Parameter estimates from maximum likelihood<br>
+Standard error from the Fisher information matrix</p>
+
+<p>Example:
+\[\begin{aligned}
+  \hat\mu   &= -5.5    &(\textrm{s.e. }\: 0.84)   \\
+  \hat\beta &=  0.038  &(\textrm{s.e. }\: 0.0063)
+  \end{aligned}\]</p>
+
+<p>Easier to interpret as an odds ratio:
+\[\textrm{OR} = e^{\hat\beta} = 1.04\]</p>
+
+<p>Can also calculate a confidence interval for the OR:
+\[\textrm{95% CI} = e^{\hat\beta \pm 2 \mathrm{se}(\hat\beta)} = (1.03, 1.05)\]</p>
+
+<p>Standard likelihood theory: estimates are asymptotically unbiased, efficient
+and normally distributed</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Hypothesis testing</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usually interested in tests of effect parameters, for example:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]</p>
+
+<p>Use a likelihood ratio test to carry this out:</p>
+
+<ul>
+<li>Fit both models</li>
+<li>Compare \(-2 \log(\textrm{likelihood ratio})\) against a \(\chi^2\) distribution</li>
+<li>Usually, just summarise the outcome by a p-value</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Hypothesis testing</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usually interested in tests of effect parameters, for example:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]</p>
+
+<p>Use a likelihood ratio test to carry this out:</p>
+
+<ul>
+<li>Fit both models</li>
+<li>Compare \(-2 \log(\textrm{likelihood ratio})\) against a \(\chi^2\) distribution</li>
+<li>Usually, just summarise the outcome by a p-value</li>
+</ul>
+
+<p>Example:
+\[\textrm{p-value} = 2.5 \times 10^{-12}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Building up more complex models</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Can add more predictor variables, the same as for linear regression:</p>
+
+<ul>
+<li>Continuous \(x\)</li>
+<li>Discrete \(x\)</li>
+<li>Non-linear transformations (\(x^2\), \(\sin(x)\), etc.)</li>
+<li>Interaction terms</li>
+</ul>
+
+<p>Estimation and hypothesis testing is analogous to linear regression</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Case-control studies and logistic regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Case-control studies: only ORs are estimable</p>
+
+<p>Logistic regression: estimates ORs</p>
+
+<p><em>A perfect match!</em></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Case-control studies and logistic regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Case-control studies: only ORs are estimable</p>
+
+<p>Logistic regression: estimates ORs</p>
+
+<p><em>A perfect match!</em></p>
+
+<p>(Note: this is a property of the logit link function)</p>
+
+<p>Example: genome-wide association studies (GWAS)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>GWAS example, single SNP analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Consider a study with 1000 cases and 1000 controls</p>
+
+<p>For individual \(i\):</p>
+
+<ul>
+<li>\(Y_i\) is the case-control status</li>
+<li>\(G_i\) is the genotype of a given SNP</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>GWAS example, single SNP analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Consider a study with 1000 cases and 1000 controls</p>
+
+<p>For individual \(i\):</p>
+
+<ul>
+<li>\(Y_i\) is the case-control status</li>
+<li>\(G_i\) is the genotype of a given SNP</li>
+</ul>
+
+<p>Example data:</p>
+
+<table><thead>
+<tr>
+<th></th>
+<th>\(G = 0\)</th>
+<th>\(G = 1\)</th>
+<th>\(G = 2\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(Y = 0\) (controls)</td>
+<td>360</td>
+<td>468</td>
+<td>172</td>
+</tr>
+<tr>
+<td>\(Y = 1\) (cases)</td>
+<td>301</td>
+<td>486</td>
+<td>213</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Models for single-SNP association</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Additive model</h3>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
+Each copy of the allele increase the log odds of disease by \(e^{\beta}\)<br>
+<strong>This model underlies the vast majority of analyses</strong></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Models for single-SNP association</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Additive model</h3>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
+Each copy of the allele increase the log odds of disease by \(e^{\beta}\)<br>
+<strong>This model underlies the vast majority of analyses</strong></p>
+
+<h3>General model</h3>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta_1 \mathrm{I}(G_i = 1) +
+                              \beta_2 \mathrm{I}(G_i = 2)\]
+The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<br>
+<strong>Here, the genotype is treated as categorical</strong></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Inference with the additive model</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/snp-1.png" title="plot of chunk snp" alt="plot of chunk snp" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p>Parameter estimates:
+\[\begin{aligned}
+  \hat\mu   &= -0.17  &(\textrm{s.e. }\: 0.071) \\
+  \hat\beta &=  0.20  &(\textrm{s.e. }\: 0.063)
+  \end{aligned}\]</p>
+
+<p>\[\begin{aligned}
+  \textrm{OR}     &= e^{\hat\beta} = 1.22 \\
+  \textrm{95% CI} &= (1.08, 1.38)
+  \end{aligned}\]</p>
+
+<p>Association test:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]</p>
+
+<p>\[\textrm{p-value} = 0.0017\]</p>
+
+<p><strong>NOT</strong> &#39;genome-wide significant&#39;</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Extensions</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Can easily add covariates:</p>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta X_i + \mathbf{\gamma Z} \]</p>
+
+<p>For example: sex, ethnicity, principal components,...</p>
+
+<p>Inference and testing follows similarly</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Issues, extensions &amp; related topics</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Multinomial logistic regression</li>
+<li>Ordinal logistic regression</li>
+<li>Equivalence with log-linear models (Poisson regression)</li>
+<li>Grouped vs individual data</li>
+<li>Separability</li>
+<li>Multicollinearity</li>
+<li>Noncollapsibility</li>
+<li>Modelling extra dispersion</li>
+<li>Association \(\ne\) causation</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Stuff I won&#39;t mention probably...</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Saturated models (complete fit to the data)</li>
+<li>Contingency tables</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Linear regression'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Linear regression'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Binary outcome variable'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Binary outcome variable'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Binary outcome variable'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Binary outcome variable'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Link function'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Logistic regression'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Logistic regression'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Parameter interpretation'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Comparison to linear regression'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Likelihood function'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Estimation'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Hypothesis testing'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Hypothesis testing'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Building up more complex models'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Case-control studies and logistic regression'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Case-control studies and logistic regression'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='GWAS example, single SNP analysis'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='GWAS example, single SNP analysis'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Models for single-SNP association'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Models for single-SNP association'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Inference with the additive model'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Extensions'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Issues, extensions &amp; related topics'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Stuff I won&#39;t mention probably...'>
+         26
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="/home/damjan/R/x86_64-pc-linux-gnu-library/3.3/slidifyLibraries/libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
