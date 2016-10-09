@@ -209,11 +209,11 @@ Logistic regression model:
 
 Notes:
 
-* The observations $Y_i$ are assumed to be independent (conditional on $X_i$)
+* $Y_i$ assumed to be independent, conditional on $X_i$
 
-* The logit function 'links' the original scale (of the outcome variable) with
-the modelling scale (of the linear predictor), ensuring all predictions give
-valid probabilities
+* $\mathrm{logit()}$ ensures all predictions give valid probabilities,  
+by 'linking' the outcome scale ($p_i$) with the modelling
+scale ($\mu + \beta X_i$)
 
 ---
 
