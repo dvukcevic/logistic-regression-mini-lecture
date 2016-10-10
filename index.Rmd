@@ -178,7 +178,7 @@ Transform outcome probabilities onto the *log odds* scale:
 
 ```{r logit-link, echo=FALSE, fig.width=7, fig.height=4, fig.align="center"}
 par(mar = c(5.1, 4.1, 2, 2))
-curve(expit, -4, 4, lwd = 2, col = 4,
+curve(expit, -4, 4, lwd = 2, col = "magenta",
       xaxs = "i", yaxs = "i", ylim = c(0, 1),
       ylab = "p", xlab = "logit( p )")
 ```
