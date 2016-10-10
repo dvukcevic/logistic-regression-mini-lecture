@@ -11,3 +11,11 @@ em {
 strong {
     font-weight: bold;
 }
+
+/* Make tables narrower, and remove alternate shading */
+table {
+    width: 70%;
+}
+table tr:nth-child(n+1) {
+    background: #EFEEDD;
+}
