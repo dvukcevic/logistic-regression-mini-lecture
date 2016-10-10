@@ -171,7 +171,7 @@ plot4()
 
 ---
 
-## Link function
+## Logit transformation
 
 Transform outcome probabilities onto the *log odds* scale:
 \[\mathrm{logit}(p) = \log\left(\frac{p}{1-p}\right)\]
@@ -207,9 +207,9 @@ Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
 \[\mathrm{logit}(p_i) = \mu + \beta X_i\]
 
-Notes:
+$Y_i$ are independent, conditional on $X_i$
 
-* $Y_i$ assumed to be independent, conditional on $X_i$
+Note:
 
 * $\mathrm{logit()}$ ensures all predictions give valid probabilities,  
 by 'linking' the outcome scale ($p_i$) with the modelling
@@ -261,7 +261,17 @@ The likelihood is a product of mass functions of Bernoulli random variables:
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
 
 The parameters and predictor variables are hidden away inside the $p_i$ terms,
-\[p_i = \frac{e^{\mu + \beta X_i}}{1 + e^{\mu + \beta X_i}}\]
+\[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]
+
+---
+
+## Likelihood function
+
+The likelihood is a product of mass functions of Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
+
+The parameters and predictor variables are hidden away inside the $p_i$ terms,
+\[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]
 
 Maximise the likelihood using the **iteratively reweighted least squares
 (IRLS)** method
@@ -301,7 +311,7 @@ Usually interested in tests of effect parameters, for example:
   H_1\colon \: \beta \ne 0
   \end{cases}\]
 
-Use a likelihood ratio test to carry this out:
+Use a **likelihood ratio test** to carry this out:
 
 * Fit both models
 * Compare $-2 \log(\textrm{likelihood ratio})$ against a $\chi^2$ distribution
@@ -317,7 +327,7 @@ Usually interested in tests of effect parameters, for example:
   H_1\colon \: \beta \ne 0
   \end{cases}\]
 
-Use a likelihood ratio test to carry this out:
+Use a **likelihood ratio test** to carry this out:
 
 * Fit both models
 * Compare $-2 \log(\textrm{likelihood ratio})$ against a $\chi^2$ distribution
@@ -337,7 +347,9 @@ Can add more predictor variables, the same as for linear regression:
 * Non-linear transformations ($x^2$, $\sin(x)$, etc.)
 * Interaction terms
 
-Estimation and hypothesis testing is analogous to linear regression
+For example:
+\[\mathrm{logit}(p_i) = \mu + \beta_1 X_i + \beta_2 X_i^2 +
+                        \gamma_j \mathrm{I}(Z_i = j)\]
 
 ---
 
@@ -359,15 +371,13 @@ Logistic regression: estimates ORs
 
 *A perfect match!*
 
-(Note: this is a property of the logit link function)
-
-Example: genome-wide association studies (GWAS)
+Example: **genome-wide association studies (GWAS)**
 
 ---
 
 ## GWAS example, single SNP analysis
 
-Consider a study with 1000 cases and 1000 controls
+Consider a disease study with 1000 cases and 1000 controls
 
 For individual $i$:
 
@@ -398,7 +408,8 @@ $Y = 1$ (cases)     |    301    |    486    |    213
 
 ### Additive model
 \[\mathrm{logit}(p_i) = \mu + \beta G_i\]
-Each copy of the allele increase the log odds of disease by $e^{\beta}$  
+$G_i$ is numeric  
+Each copy of the SNP allele increase the odds of disease by $e^{\beta}$  
 **This model underlies the vast majority of analyses**
 
 ---
@@ -407,14 +418,15 @@ Each copy of the allele increase the log odds of disease by $e^{\beta}$
 
 ### Additive model
 \[\mathrm{logit}(p_i) = \mu + \beta G_i\]
-Each copy of the allele increase the log odds of disease by $e^{\beta}$  
+$G_i$ is numeric  
+Each copy of the SNP allele increase the odds of disease by $e^{\beta}$  
 **This model underlies the vast majority of analyses**
 
 ### General model
 \[\mathrm{logit}(p_i) = \mu + \beta_1 \mathrm{I}(G_i = 1) +
                               \beta_2 \mathrm{I}(G_i = 2)\]
+$G_i$ is categorical  
 The heterozygote OR is $e^{\beta_1}$ and the homozygote OR is $e^{\beta_2}$  
-**Here, the genotype is treated as categorical**
 
 --- &twocol
 
@@ -463,21 +475,8 @@ Inference and testing follows similarly
 
 ---
 
-## Issues, extensions & related topics
+## Related models
 
 * Multinomial logistic regression
 * Ordinal logistic regression
-* Equivalence with log-linear models (Poisson regression)
-* Grouped vs individual data
-* Separability
-* Multicollinearity
-* Noncollapsibility
-* Modelling extra dispersion
-* Association $\ne$ causation
-
----
-
-## Stuff I won't mention probably...
-
-* Saturated models (complete fit to the data)
-* Contingency tables
+* Poisson regression ('log-linear model')

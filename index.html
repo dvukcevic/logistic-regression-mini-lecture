@@ -110,7 +110,7 @@
 
 <slide class="" id="slide-7" style="background:;">
   <hgroup>
-    <h2>Link function</h2>
+    <h2>Logit transformation</h2>
   </hgroup>
   <article data-timings="">
     <p>Transform outcome probabilities onto the <em>log odds</em> scale:
@@ -152,13 +152,14 @@
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
 \[\mathrm{logit}(p_i) = \mu + \beta X_i\]</p>
 
-<p>Notes:</p>
+<p>\(Y_i\) are independent, conditional on \(X_i\)</p>
+
+<p>Note:</p>
 
 <ul>
-<li><p>\(Y_i\) assumed to be independent, conditional on \(X_i\)</p></li>
-<li><p>\(\mathrm{logit()}\) ensures all predictions give valid probabilities,<br>
+<li>\(\mathrm{logit()}\) ensures all predictions give valid probabilities,<br>
 by &#39;linking&#39; the outcome scale (\(p_i\)) with the modelling
-scale (\(\mu + \beta X_i\))</p></li>
+scale (\(\mu + \beta X_i\))</li>
 </ul>
 
   </article>
@@ -224,7 +225,22 @@ and \(\beta\) is the <strong>log odds ratio</strong></p>
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
 
 <p>The parameters and predictor variables are hidden away inside the \(p_i\) terms,
-\[p_i = \frac{e^{\mu + \beta X_i}}{1 + e^{\mu + \beta X_i}}\]</p>
+\[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Likelihood function</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The likelihood is a product of mass functions of Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
+
+<p>The parameters and predictor variables are hidden away inside the \(p_i\) terms,
+\[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]</p>
 
 <p>Maximise the likelihood using the <strong>iteratively reweighted least squares
 (IRLS)</strong> method</p>
@@ -235,7 +251,7 @@ and \(\beta\) is the <strong>log odds ratio</strong></p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Estimation</h2>
   </hgroup>
@@ -263,29 +279,6 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
-  <hgroup>
-    <h2>Hypothesis testing</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Usually interested in tests of effect parameters, for example:
-\[\begin{cases}
-  H_0\colon \: \beta  =  0 \\
-  H_1\colon \: \beta \ne 0
-  \end{cases}\]</p>
-
-<p>Use a likelihood ratio test to carry this out:</p>
-
-<ul>
-<li>Fit both models</li>
-<li>Compare \(-2 \log(\textrm{likelihood ratio})\) against a \(\chi^2\) distribution</li>
-<li>Usually, just summarise the outcome by a p-value</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
 <slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Hypothesis testing</h2>
@@ -297,7 +290,30 @@ and normally distributed</p>
   H_1\colon \: \beta \ne 0
   \end{cases}\]</p>
 
-<p>Use a likelihood ratio test to carry this out:</p>
+<p>Use a <strong>likelihood ratio test</strong> to carry this out:</p>
+
+<ul>
+<li>Fit both models</li>
+<li>Compare \(-2 \log(\textrm{likelihood ratio})\) against a \(\chi^2\) distribution</li>
+<li>Usually, just summarise the outcome by a p-value</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Hypothesis testing</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Usually interested in tests of effect parameters, for example:
+\[\begin{cases}
+  H_0\colon \: \beta  =  0 \\
+  H_1\colon \: \beta \ne 0
+  \end{cases}\]</p>
+
+<p>Use a <strong>likelihood ratio test</strong> to carry this out:</p>
 
 <ul>
 <li>Fit both models</li>
@@ -312,7 +328,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Building up more complex models</h2>
   </hgroup>
@@ -326,22 +342,9 @@ and normally distributed</p>
 <li>Interaction terms</li>
 </ul>
 
-<p>Estimation and hypothesis testing is analogous to linear regression</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-17" style="background:;">
-  <hgroup>
-    <h2>Case-control studies and logistic regression</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Case-control studies: only ORs are estimable</p>
-
-<p>Logistic regression: estimates ORs</p>
-
-<p><em>A perfect match!</em></p>
+<p>For example:
+\[\mathrm{logit}(p_i) = \mu + \beta_1 X_i + \beta_2 X_i^2 +
+                        \gamma_j \mathrm{I}(Z_i = j)\]</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -358,20 +361,33 @@ and normally distributed</p>
 
 <p><em>A perfect match!</em></p>
 
-<p>(Note: this is a property of the logit link function)</p>
-
-<p>Example: genome-wide association studies (GWAS)</p>
-
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-19" style="background:;">
   <hgroup>
+    <h2>Case-control studies and logistic regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Case-control studies: only ORs are estimable</p>
+
+<p>Logistic regression: estimates ORs</p>
+
+<p><em>A perfect match!</em></p>
+
+<p>Example: <strong>genome-wide association studies (GWAS)</strong></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
     <h2>GWAS example, single SNP analysis</h2>
   </hgroup>
   <article data-timings="">
-    <p>Consider a study with 1000 cases and 1000 controls</p>
+    <p>Consider a disease study with 1000 cases and 1000 controls</p>
 
 <p>For individual \(i\):</p>
 
@@ -384,7 +400,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>GWAS example, single SNP analysis</h2>
   </hgroup>
@@ -426,21 +442,6 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
-  <hgroup>
-    <h2>Models for single-SNP association</h2>
-  </hgroup>
-  <article data-timings="">
-    <h3>Additive model</h3>
-
-<p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
-Each copy of the allele increase the log odds of disease by \(e^{\beta}\)<br>
-<strong>This model underlies the vast majority of analyses</strong></p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
 <slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Models for single-SNP association</h2>
@@ -449,21 +450,38 @@ Each copy of the allele increase the log odds of disease by \(e^{\beta}\)<br>
     <h3>Additive model</h3>
 
 <p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
-Each copy of the allele increase the log odds of disease by \(e^{\beta}\)<br>
+\(G_i\) is numeric<br>
+Each copy of the SNP allele increase the odds of disease by \(e^{\beta}\)<br>
 <strong>This model underlies the vast majority of analyses</strong></p>
-
-<h3>General model</h3>
-
-<p>\[\mathrm{logit}(p_i) = \mu + \beta_1 \mathrm{I}(G_i = 1) +
-                              \beta_2 \mathrm{I}(G_i = 2)\]
-The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<br>
-<strong>Here, the genotype is treated as categorical</strong></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Models for single-SNP association</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Additive model</h3>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
+\(G_i\) is numeric<br>
+Each copy of the SNP allele increase the odds of disease by \(e^{\beta}\)<br>
+<strong>This model underlies the vast majority of analyses</strong></p>
+
+<h3>General model</h3>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta_1 \mathrm{I}(G_i = 1) +
+                              \beta_2 \mathrm{I}(G_i = 2)\]
+\(G_i\) is categorical<br>
+The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)  </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Inference with the additive model</h2>
   </hgroup>
@@ -500,7 +518,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Extensions</h2>
   </hgroup>
@@ -517,35 +535,15 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-26" style="background:;">
   <hgroup>
-    <h2>Issues, extensions &amp; related topics</h2>
+    <h2>Related models</h2>
   </hgroup>
   <article data-timings="">
     <ul>
 <li>Multinomial logistic regression</li>
 <li>Ordinal logistic regression</li>
-<li>Equivalence with log-linear models (Poisson regression)</li>
-<li>Grouped vs individual data</li>
-<li>Separability</li>
-<li>Multicollinearity</li>
-<li>Noncollapsibility</li>
-<li>Modelling extra dispersion</li>
-<li>Association \(\ne\) causation</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-26" style="background:;">
-  <hgroup>
-    <h2>Stuff I won&#39;t mention probably...</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Saturated models (complete fit to the data)</li>
-<li>Contingency tables</li>
+<li>Poisson regression (&#39;log-linear model&#39;)</li>
 </ul>
 
   </article>
@@ -594,7 +592,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Link function'>
+        data-slide=7 title='Logit transformation'>
          7
       </a>
     </li>
@@ -630,13 +628,13 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Estimation'>
+        data-slide=13 title='Likelihood function'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Hypothesis testing'>
+        data-slide=14 title='Estimation'>
          14
       </a>
     </li>
@@ -648,13 +646,13 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Building up more complex models'>
+        data-slide=16 title='Hypothesis testing'>
          16
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Case-control studies and logistic regression'>
+        data-slide=17 title='Building up more complex models'>
          17
       </a>
     </li>
@@ -666,7 +664,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='GWAS example, single SNP analysis'>
+        data-slide=19 title='Case-control studies and logistic regression'>
          19
       </a>
     </li>
@@ -678,7 +676,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Models for single-SNP association'>
+        data-slide=21 title='GWAS example, single SNP analysis'>
          21
       </a>
     </li>
@@ -690,25 +688,25 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Inference with the additive model'>
+        data-slide=23 title='Models for single-SNP association'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Extensions'>
+        data-slide=24 title='Inference with the additive model'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Issues, extensions &amp; related topics'>
+        data-slide=25 title='Extensions'>
          25
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='Stuff I won&#39;t mention probably...'>
+        data-slide=26 title='Related models'>
          26
       </a>
     </li>
