@@ -194,7 +194,7 @@ $X_i$ is a predictor variable
 
 Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]
+\[\mathrm{logit}(p_i) = \log\left(\frac{p_i}{1-p_i}\right) = \mu + \beta X_i\]
 
 $Y_i$ are independent, conditional on $X_i$
 
@@ -207,7 +207,7 @@ $X_i$ is a predictor variable
 
 Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]
+\[\mathrm{logit}(p_i) = \log\left(\frac{p_i}{1-p_i}\right) = \mu + \beta X_i\]
 
 $Y_i$ are independent, conditional on $X_i$
 
