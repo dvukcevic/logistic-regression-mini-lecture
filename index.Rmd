@@ -194,7 +194,9 @@ $X_i$ is a predictor variable
 
 Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \mu + \beta X_i\]
+\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]
+
+$Y_i$ are independent, conditional on $X_i$
 
 ---
 
@@ -205,7 +207,7 @@ $X_i$ is a predictor variable
 
 Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \mu + \beta X_i\]
+\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]
 
 $Y_i$ are independent, conditional on $X_i$
 
@@ -214,6 +216,114 @@ Note:
 * $\mathrm{logit()}$ ensures all predictions give valid probabilities,  
 by 'linking' the outcome scale ($p_i$) with the modelling
 scale ($\mu + \beta X_i$)
+
+--- &twocol
+
+## Example
+
+*** =left
+
+```{r logit-example1, echo=FALSE, fig.width=5.7, fig.height = 6, fig.align="center"}
+mu1   <- -6
+beta1 <- 0.05
+par(mar = c(5.1, 4.1, 2, 2))
+curve(expit(mu1 + beta1 * x),
+      60, 220, lwd = 2, col = "magenta",
+      xaxs = "i", yaxs = "i", ylim = c(0, 1),
+      ylab = "Pr( Diabetes )",
+      xlab = "Glucose concentration")
+x1 <- c(100, 200)
+```
+
+*** =right
+
+Let $\mu = -6$ and $\beta = 0.05$,
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]
+
+--- &twocol
+
+## Example
+
+*** =left
+
+```{r logit-example2, echo=FALSE, fig.width=5.7, fig.height = 6, fig.align="center"}
+mu1   <- -6
+beta1 <- 0.05
+par(mar = c(5.1, 4.1, 2, 2))
+curve(expit(mu1 + beta1 * x),
+      60, 220, lwd = 2, col = "magenta",
+      xaxs = "i", yaxs = "i", ylim = c(0, 1),
+      ylab = "Pr( Diabetes )",
+      xlab = "Glucose concentration")
+x1 <- c(100, 200)
+```
+
+*** =right
+
+Let $\mu = -6$ and $\beta = 0.05$,
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]
+
+Re-arrange,
+\[p_i = \frac{e^{-6 + 0.05 X_i}}{1 + e^{-6 + 0.05 X_i}}\]
+
+--- &twocol
+
+## Example
+
+*** =left
+
+```{r logit-example3, echo=FALSE, fig.width=5.7, fig.height = 6, fig.align="center"}
+mu1   <- -6
+beta1 <- 0.05
+par(mar = c(5.1, 4.1, 2, 2))
+curve(expit(mu1 + beta1 * x),
+      60, 220, lwd = 2, col = "magenta",
+      xaxs = "i", yaxs = "i", ylim = c(0, 1),
+      ylab = "Pr( Diabetes )",
+      xlab = "Glucose concentration")
+x1 <- c(100, 200)
+points(x1, expit(mu1 + beta1 * x1), cex = 2, pch = 19, col = "magenta")
+```
+
+*** =right
+
+Let $\mu = -6$ and $\beta = 0.05$,
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]
+
+Re-arrange,
+\[p_i = \frac{e^{-6 + 0.05 X_i}}{1 + e^{-6 + 0.05 X_i}}\]
+
+Plug in some values:
+\[X_i = 100 \quad \mapsto \quad p_i = 0.27\]
+\[X_i = 200 \quad \mapsto \quad p_i = 0.98\]
+
+---
+
+## Parameter interpretation
+
+Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]
+
+---
+
+## Parameter interpretation
+
+Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]
+
+Consider binary $X_i \in \{0, 1\}$
+\[X_i = 0 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                               \phantom{e^{\beta}}\]
+\[X_i = 1 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                                        e^{\beta}\]
 
 ---
 
@@ -257,26 +367,48 @@ Differences:
 
 ## Likelihood function
 
-The likelihood is a product of mass functions of Bernoulli random variables:
+The **likelihood** is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]
+
+---
+
+## Likelihood function
+
+The **likelihood** is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]
+
+In this case, Bernoulli random variables:
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
 
-The parameters and predictor variables are hidden away inside the $p_i$ terms,
+---
+
+## Likelihood function
+
+The **likelihood** is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]
+
+In this case, Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
+
+The parameters are hidden inside the $p_i$ terms,
 \[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]
 
 ---
 
 ## Likelihood function
 
-The likelihood is a product of mass functions of Bernoulli random variables:
+The **likelihood** is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]
+
+In this case, Bernoulli random variables:
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]
 
-The parameters and predictor variables are hidden away inside the $p_i$ terms,
+The parameters are hidden inside the $p_i$ terms,
 \[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]
 
 Maximise the likelihood using the **iteratively reweighted least squares
-(IRLS)** method
-
-Estimation and testing then follow the same as for linear regression...
+(IRLS)** method.  Estimation and testing then follow the same as for linear
+regression...
 
 ---
 
@@ -388,7 +520,7 @@ For individual $i$:
 
 ## GWAS example, single SNP analysis
 
-Consider a study with 1000 cases and 1000 controls
+Consider a disease study with 1000 cases and 1000 controls
 
 For individual $i$:
 
@@ -409,7 +541,7 @@ $Y = 1$ (cases)     |    301    |    486    |    213
 ### Additive model
 \[\mathrm{logit}(p_i) = \mu + \beta G_i\]
 $G_i$ is numeric  
-Each copy of the SNP allele increase the odds of disease by $e^{\beta}$  
+Each copy of the SNP allele increases the odds of disease by $e^{\beta}$  
 **This model underlies the vast majority of analyses**
 
 ---
@@ -419,7 +551,7 @@ Each copy of the SNP allele increase the odds of disease by $e^{\beta}$
 ### Additive model
 \[\mathrm{logit}(p_i) = \mu + \beta G_i\]
 $G_i$ is numeric  
-Each copy of the SNP allele increase the odds of disease by $e^{\beta}$  
+Each copy of the SNP allele increases the odds of disease by $e^{\beta}$  
 **This model underlies the vast majority of analyses**
 
 ### General model
@@ -475,7 +607,17 @@ Inference and testing follows similarly
 
 ---
 
-## Related models
+## Extensions
+
+Can easily add covariates:
+
+\[\mathrm{logit}(p_i) = \mu + \beta X_i + \mathbf{\gamma Z} \]
+
+For example: sex, ethnicity, principal components,...
+
+Inference and testing follows similarly
+
+### Related models
 
 * Multinomial logistic regression
 * Ordinal logistic regression

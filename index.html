@@ -134,7 +134,9 @@
 
 <p>Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \mu + \beta X_i\]</p>
+\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]</p>
+
+<p>\(Y_i\) are independent, conditional on \(X_i\)</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -150,7 +152,7 @@
 
 <p>Logistic regression model:
 \[p_i = \Pr(Y_i = 1 \mid X_i)\]
-\[\mathrm{logit}(p_i) = \mu + \beta X_i\]</p>
+\[\mathrm{logit}(p_i) = \log\left(\frac{p}{1-p}\right) = \mu + \beta X_i\]</p>
 
 <p>\(Y_i\) are independent, conditional on \(X_i\)</p>
 
@@ -167,6 +169,111 @@ scale (\(\mu + \beta X_i\))</li>
 </slide>
 
 <slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/logit-example1-1.png" title="plot of chunk logit-example1" alt="plot of chunk logit-example1" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p>Let \(\mu = -6\) and \(\beta = 0.05\),
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/logit-example2-1.png" title="plot of chunk logit-example2" alt="plot of chunk logit-example2" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p>Let \(\mu = -6\) and \(\beta = 0.05\),
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]</p>
+
+<p>Re-arrange,
+\[p_i = \frac{e^{-6 + 0.05 X_i}}{1 + e^{-6 + 0.05 X_i}}\]</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/logit-example3-1.png" title="plot of chunk logit-example3" alt="plot of chunk logit-example3" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p>Let \(\mu = -6\) and \(\beta = 0.05\),
+\[\mathrm{logit}(p_i) = -6 + 0.05 \, X_i\]</p>
+
+<p>Re-arrange,
+\[p_i = \frac{e^{-6 + 0.05 X_i}}{1 + e^{-6 + 0.05 X_i}}\]</p>
+
+<p>Plug in some values:
+\[X_i = 100 \quad \mapsto \quad p_i = 0.27\]
+\[X_i = 200 \quad \mapsto \quad p_i = 0.98\]</p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Parameter interpretation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Parameter interpretation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Re-write the model:
+\[\begin{aligned}
+  \mathrm{logit}(p_i) &= \mu + \beta X_i \\
+  \Rightarrow \quad
+  \frac{p_i}{1 - p_i} &= e^{\mu + \beta X_i}
+  \end{aligned}\]</p>
+
+<p>Consider binary \(X_i \in \{0, 1\}\)
+\[X_i = 0 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                               \phantom{e^{\beta}}\]
+\[X_i = 1 \quad \Rightarrow \quad \frac{p_i}{1 - p_i} = e^{\mu}
+                                                        e^{\beta}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Parameter interpretation</h2>
   </hgroup>
@@ -193,7 +300,7 @@ and \(\beta\) is the <strong>log odds ratio</strong></p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Comparison to linear regression</h2>
   </hgroup>
@@ -216,42 +323,74 @@ and \(\beta\) is the <strong>log odds ratio</strong></p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Likelihood function</h2>
   </hgroup>
   <article data-timings="">
-    <p>The likelihood is a product of mass functions of Bernoulli random variables:
+    <p>The <strong>likelihood</strong> is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Likelihood function</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The <strong>likelihood</strong> is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]</p>
+
+<p>In this case, Bernoulli random variables:
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
 
-<p>The parameters and predictor variables are hidden away inside the \(p_i\) terms,
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Likelihood function</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The <strong>likelihood</strong> is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]</p>
+
+<p>In this case, Bernoulli random variables:
+\[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
+
+<p>The parameters are hidden inside the \(p_i\) terms,
 \[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]</p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>Likelihood function</h2>
   </hgroup>
   <article data-timings="">
-    <p>The likelihood is a product of mass functions of Bernoulli random variables:
+    <p>The <strong>likelihood</strong> is the probability of the observed outcome variables:
+\[L(\mu, \beta) = \prod_i \Pr(Y_i = y_i \mid X_i = x_i)\]</p>
+
+<p>In this case, Bernoulli random variables:
 \[L(\mu, \beta) = \prod_i p_i^{y_i} (1 - p_i)^{1 - y_i}\]</p>
 
-<p>The parameters and predictor variables are hidden away inside the \(p_i\) terms,
+<p>The parameters are hidden inside the \(p_i\) terms,
 \[p_i = \frac{e^{\mu + \beta x_i}}{1 + e^{\mu + \beta x_i}}\]</p>
 
 <p>Maximise the likelihood using the <strong>iteratively reweighted least squares
-(IRLS)</strong> method</p>
-
-<p>Estimation and testing then follow the same as for linear regression...</p>
+(IRLS)</strong> method.  Estimation and testing then follow the same as for linear
+regression...</p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>Estimation</h2>
   </hgroup>
@@ -279,7 +418,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-15" style="background:;">
+<slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Hypothesis testing</h2>
   </hgroup>
@@ -302,7 +441,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Hypothesis testing</h2>
   </hgroup>
@@ -328,7 +467,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-17" style="background:;">
+<slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Building up more complex models</h2>
   </hgroup>
@@ -350,7 +489,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-18" style="background:;">
+<slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>Case-control studies and logistic regression</h2>
   </hgroup>
@@ -365,7 +504,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-19" style="background:;">
+<slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Case-control studies and logistic regression</h2>
   </hgroup>
@@ -382,7 +521,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>GWAS example, single SNP analysis</h2>
   </hgroup>
@@ -400,12 +539,12 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>GWAS example, single SNP analysis</h2>
   </hgroup>
   <article data-timings="">
-    <p>Consider a study with 1000 cases and 1000 controls</p>
+    <p>Consider a disease study with 1000 cases and 1000 controls</p>
 
 <p>For individual \(i\):</p>
 
@@ -442,7 +581,7 @@ and normally distributed</p>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-29" style="background:;">
   <hgroup>
     <h2>Models for single-SNP association</h2>
   </hgroup>
@@ -451,14 +590,14 @@ and normally distributed</p>
 
 <p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
 \(G_i\) is numeric<br>
-Each copy of the SNP allele increase the odds of disease by \(e^{\beta}\)<br>
+Each copy of the SNP allele increases the odds of disease by \(e^{\beta}\)<br>
 <strong>This model underlies the vast majority of analyses</strong></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-30" style="background:;">
   <hgroup>
     <h2>Models for single-SNP association</h2>
   </hgroup>
@@ -467,7 +606,7 @@ Each copy of the SNP allele increase the odds of disease by \(e^{\beta}\)<br>
 
 <p>\[\mathrm{logit}(p_i) = \mu + \beta G_i\]
 \(G_i\) is numeric<br>
-Each copy of the SNP allele increase the odds of disease by \(e^{\beta}\)<br>
+Each copy of the SNP allele increases the odds of disease by \(e^{\beta}\)<br>
 <strong>This model underlies the vast majority of analyses</strong></p>
 
 <h3>General model</h3>
@@ -481,7 +620,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\) 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-31" style="background:;">
   <hgroup>
     <h2>Inference with the additive model</h2>
   </hgroup>
@@ -518,7 +657,7 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\) 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-32" style="background:;">
   <hgroup>
     <h2>Extensions</h2>
   </hgroup>
@@ -535,12 +674,22 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\) 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-26" style="background:;">
+<slide class="" id="slide-33" style="background:;">
   <hgroup>
-    <h2>Related models</h2>
+    <h2>Extensions</h2>
   </hgroup>
   <article data-timings="">
-    <ul>
+    <p>Can easily add covariates:</p>
+
+<p>\[\mathrm{logit}(p_i) = \mu + \beta X_i + \mathbf{\gamma Z} \]</p>
+
+<p>For example: sex, ethnicity, principal components,...</p>
+
+<p>Inference and testing follows similarly</p>
+
+<h3>Related models</h3>
+
+<ul>
 <li>Multinomial logistic regression</li>
 <li>Ordinal logistic regression</li>
 <li>Poisson regression (&#39;log-linear model&#39;)</li>
@@ -610,104 +759,146 @@ The heterozygote OR is \(e^{\beta_1}\) and the homozygote OR is \(e^{\beta_2}\) 
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Parameter interpretation'>
+        data-slide=10 title='Example'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Comparison to linear regression'>
+        data-slide=11 title='Example'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Likelihood function'>
+        data-slide=12 title='Example'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Likelihood function'>
+        data-slide=13 title='Parameter interpretation'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Estimation'>
+        data-slide=14 title='Parameter interpretation'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='Hypothesis testing'>
+        data-slide=15 title='Parameter interpretation'>
          15
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Hypothesis testing'>
+        data-slide=16 title='Comparison to linear regression'>
          16
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Building up more complex models'>
+        data-slide=17 title='Likelihood function'>
          17
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='Case-control studies and logistic regression'>
+        data-slide=18 title='Likelihood function'>
          18
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='Case-control studies and logistic regression'>
+        data-slide=19 title='Likelihood function'>
          19
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='GWAS example, single SNP analysis'>
+        data-slide=20 title='Likelihood function'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='GWAS example, single SNP analysis'>
+        data-slide=21 title='Estimation'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Models for single-SNP association'>
+        data-slide=22 title='Hypothesis testing'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Models for single-SNP association'>
+        data-slide=23 title='Hypothesis testing'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Inference with the additive model'>
+        data-slide=24 title='Building up more complex models'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Extensions'>
+        data-slide=25 title='Case-control studies and logistic regression'>
          25
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='Related models'>
+        data-slide=26 title='Case-control studies and logistic regression'>
          26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='GWAS example, single SNP analysis'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='GWAS example, single SNP analysis'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Models for single-SNP association'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Models for single-SNP association'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Inference with the additive model'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Extensions'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Extensions'>
+         33
       </a>
     </li>
   </ul>
