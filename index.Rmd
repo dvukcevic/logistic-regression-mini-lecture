@@ -10,6 +10,9 @@ widgets     : [mathjax]
 mode        : selfcontained
 knit        : slidify::knit2slides
 license     : by-sa
+github      :
+  user      : dvukcevic
+  repo      : logistic-regression-mini-lecture
 ---
 
 ```{r setup, include=FALSE}
