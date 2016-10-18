@@ -9,6 +9,7 @@ hitheme     : monokai
 widgets     : [mathjax]
 mode        : selfcontained
 knit        : slidify::knit2slides
+license     : by-sa
 ---
 
 ```{r setup, include=FALSE}
