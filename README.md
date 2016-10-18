@@ -1,5 +1,8 @@
 # Logistic regression (mini lecture)
 
+[![DOI](https://zenodo.org/badge/71245694.svg)](https://zenodo.org/badge/latestdoi/71245694)
+
+
 This was a talk presented by [Damjan Vukcevic](http://damjan.vukcevic.net/) on
 11 October 2016 at the University of Melbourne, as part of an assessment for
 a lectureship position.
